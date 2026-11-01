@@ -1,7 +1,7 @@
 {
   "name": "pi-polkit",
   "version": "0.1.0",
-  "description": "Redirect sudo/doas to pkexec in Pi and PiG via PATH shims, so the desktop polkit agent handles authentication",
+  "description": "Redirect sudo/doas to pkexec in Pi via PATH shims, so the desktop polkit agent handles authentication",
   "type": "module",
   "pi": {
     "extensions": ["./index.ts"]
@@ -27,7 +27,7 @@
   "engines": {
     "node": ">=22.19.0"
   },
-  "keywords": ["pi-package", "pi-extension", "pig-extension", "sudo", "doas", "pkexec", "polkit", "security"],
+  "keywords": ["pi-package", "pi-extension", "sudo", "doas", "pkexec", "polkit", "security"],
   "license": "MIT",
   "repository": {
     "type": "git",

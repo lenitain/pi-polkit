@@ -199,8 +199,8 @@ let shimDirectory: string | undefined
 
 /**
  * Returns the shim directory, writing the sudo/doas stand-in scripts on first
- * use. Creation is lazy so factory-only invocations (extension inspection,
- * `pig login --list`) leave nothing behind.
+ * use. Creation is lazy so factory-only invocations (runs that never start a
+ * session) leave nothing behind.
  */
 export function ensurePolkitShims(): string {
   shimDirectory ??= installPolkitShims()

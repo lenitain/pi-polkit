@@ -21,8 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   → pkexec sanitizes the environment, `-b` → append `&`). `pkexec` would
   otherwise reject them with `Cannot run program`, which says nothing about what
   to do next.
-- `polkit-redirect.ts`: one Pi-compatible extension factory for both Pi and
-  PiG. The `bash` tool is replaced by the built-in's own definition with a
+- `polkit-redirect.ts`: the Pi extension factory. The `bash` tool is
+  replaced by the built-in's own definition with a
   `spawnHook` that prepends the shim directory to `PATH`, and `!` user commands
   run through `createLocalBashOperations` with the same prepend as their first
   command line. Command text is never rewritten.
@@ -32,6 +32,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `SHIM_USAGE_EXIT` (64) documents that the refusal status is the shim's own
   and cannot be confused with pkexec's `126`/`127`.
 - Engineering scaffolding: `npm run check` type-checks against the pinned
-  `@earendil-works/pi-coding-agent` 1.4.0, GitHub Actions CI runs it on every
-  push and pull request, and `.gitignore`/`.editorconfig` match the sibling
-  opencode-polkit project.
+  `@earendil-works/pi-coding-agent` 1.4.0, and GitHub Actions CI runs it on
+  every push and pull request.

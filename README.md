@@ -1,40 +1,28 @@
 # pi-polkit
 
-Redirects `sudo` and `doas` to `pkexec` inside Pi and PiG, so authorisation
+Redirects `sudo` and `doas` to `pkexec` inside Pi, so authorisation
 goes through the desktop's polkit agent (KDE, GNOME, …) instead of a terminal
 the shell tools do not have. Applies to the `bash` tool and to `!` user
 commands; `sudo` in other terminals is unchanged.
-
-A single Pi-compatible extension: Pi and PiG load the same source.
 
 ## Installation
 
 Install as a Pi package (published on npm):
 
 ```sh
-# Pi
 pi install npm:pi-polkit
-
-# PiG
-pig install npm:pi-polkit
 ```
 
-Or copy or symlink this directory into the extension location of the harness
-you use:
+Or copy or symlink this directory into Pi's extension location:
 
 ```sh
-# Pi
 cp -r pi-polkit ~/.pi/agent/extensions/pi-polkit
-
-# PiG
-cp -r pi-polkit ~/.pig/agent/extensions/pi-polkit
 ```
 
-For a quick test without installing, pass the directory to either harness:
+For a quick test without installing, pass the directory to Pi:
 
 ```sh
 pi -e ./pi-polkit
-pig -e ./pi-polkit
 ```
 
 ## Behavior
@@ -103,9 +91,8 @@ Messages are in English.
 ## Development
 
 `npm install && npm run check` type-checks against the pinned
-`@earendil-works/pi-coding-agent` 1.4.0, the API both harnesses serve to Node
-extensions. `pig install --validate-only ./pi-polkit` launches the extension
-through PiG's real extension host without installing it.
+`@earendil-works/pi-coding-agent` 1.4.0, the API Pi serves to Node
+extensions.
 
 ## License
 

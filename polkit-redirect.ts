@@ -3,7 +3,7 @@ import { createBashToolDefinition, createLocalBashOperations } from "@earendil-w
 import { polkitShimsPathExportLine, removePolkitShims, withPolkitShimsOnPath } from "./polkit-shims"
 
 /**
- * Redirects sudo and doas to pkexec inside Pi and PiG, so authorisation goes
+ * Redirects sudo and doas to pkexec inside Pi, so authorisation goes
  * through the desktop's polkit agent (KDE, GNOME, …) instead of a terminal the
  * shell tools do not have. Applies to the `bash` tool and to `!` user
  * commands; `sudo` in other terminals is unchanged.
