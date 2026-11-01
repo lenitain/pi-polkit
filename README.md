@@ -9,8 +9,18 @@ A single Pi-compatible extension: Pi and PiG load the same source.
 
 ## Installation
 
-Copy or symlink this directory into the extension location of the harness you
-use:
+Install as a Pi package (published on npm):
+
+```sh
+# Pi
+pi install npm:pi-polkit
+
+# PiG
+pig install npm:pi-polkit
+```
+
+Or copy or symlink this directory into the extension location of the harness
+you use:
 
 ```sh
 # Pi
