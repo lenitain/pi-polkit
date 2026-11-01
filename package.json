@@ -3,12 +3,21 @@
   "version": "0.1.0",
   "description": "Redirect sudo/doas to pkexec in Pi and PiG via PATH shims, so the desktop polkit agent handles authentication",
   "type": "module",
-  "private": true,
   "pi": {
     "extensions": ["./index.ts"]
   },
+  "files": [
+    "index.ts",
+    "polkit-redirect.ts",
+    "polkit-shims.ts",
+    "CHANGELOG.md"
+  ],
   "scripts": {
-    "check": "tsc -p tsconfig.json --noEmit"
+    "check": "tsc -p tsconfig.json --noEmit",
+    "prepublishOnly": "npm run check"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
   },
   "devDependencies": {
     "@earendil-works/pi-coding-agent": "1.4.0",
@@ -18,7 +27,7 @@
   "engines": {
     "node": ">=22.19.0"
   },
-  "keywords": ["pi-extension", "pig-extension", "sudo", "doas", "pkexec", "polkit", "security"],
+  "keywords": ["pi-package", "pi-extension", "pig-extension", "sudo", "doas", "pkexec", "polkit", "security"],
   "license": "MIT",
   "repository": {
     "type": "git",
