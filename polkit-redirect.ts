@@ -3,13 +3,13 @@ import { createBashToolDefinition, createLocalBashOperations } from "@earendil-w
 import { polkitShimsPathExportLine, removePolkitShims, withPolkitShimsOnPath } from "./polkit-shims"
 
 /**
- * Redirects sudo and doas to pkexec inside Pi, so authorisation goes
+ * Redirects sudo, doas and su -c to pkexec inside Pi, so authorisation goes
  * through the desktop's polkit agent (KDE, GNOME, …) instead of a terminal the
  * shell tools do not have. Applies to the `bash` tool and to `!` user
  * commands; `sudo` in other terminals is unchanged.
  *
  * The redirect is a PATH prepend, not a command rewrite: the shims in
- * polkit-shims.ts stand in for the sudo/doas binaries, and the shell's own
+ * polkit-shims.ts stand in for the sudo/doas/su binaries, and the shell's own
  * name resolution picks them up for `sudo`, `$(sudo …)`, `xargs sudo`,
  * `FOO=1 sudo` and nested scripts alike. Nothing parses the command string,
  * and nothing parses pkexec's output: the shims hand pkexec's exit status
@@ -32,7 +32,7 @@ export default function polkitRedirect(pi: ExtensionAPI): void {
 }
 
 /**
- * Local shell operations whose commands resolve sudo through the shims. The
+ * Local shell operations whose commands resolve sudo and su through the shims. The
  * `!` user commands run through pi's own bash backend with no prepared
  * environment, so the PATH prepend happens as the first command line; the
  * exit status and output of the command itself are unchanged.
