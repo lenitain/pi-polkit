@@ -19,11 +19,15 @@ export default function polkitRedirect(pi: ExtensionAPI): void {
   // The bash tool spawns with a prepared environment, so the shims reach it as
   // a PATH prepend. Registering the built-in's own definition under its own
   // name replaces it and keeps its prompt metadata and renderers.
-  pi.registerTool(
-    createBashToolDefinition(process.cwd(), {
-      spawnHook: ({ command, cwd, env }) => ({ command, cwd, env: withPolkitShimsOnPath(env) }),
-    }),
+  const bash = createBashToolDefinition(process.cwd(), {
+    spawnHook: ({ command, cwd, env }) => ({ command, cwd, env: withPolkitShimsOnPath(env) }),
+  })
+  // The model plans privilege with what it knows about sudo. Say once, in the
+  // system prompt, how this shell differs, so it does not learn it by failing.
+  bash.promptGuidelines?.push(
+    "`sudo`, `doas` and `su -c` are routed to pkexec, so a desktop polkit dialog authorises them instead of a terminal password prompt. `sudo -n` runs the command only if polkit would authorise it without asking, `sudo -v` performs the authentication, and `sudo -l` prints the polkit policy that decides.",
   )
+  pi.registerTool(bash)
 
   pi.on("user_bash", () => ({ operations: polkitShimsUserBashOperations() }))
 

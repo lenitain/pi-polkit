@@ -1,6 +1,6 @@
 {
   "name": "pi-polkit",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Redirect sudo, doas and su to pkexec in Pi via PATH shims, so the desktop polkit agent handles authentication",
   "type": "module",
   "pi": {

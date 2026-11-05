@@ -46,8 +46,16 @@ pi -e ./pi-polkit
 | `sudo apt install x`   | polkit dialog, then runs as root            |
 | `sudo -u bob …`        | as above, as `bob`                          |
 | `cat x \| sudo tee y`  | dialog for `tee`                            |
-| `sudo -n …`            | refused: pkexec has no non-interactive mode |
-| `sudo -i`, `-s`, `-b`  | refused, with the equivalent command        |
+| `sudo -n …`            | runs only if polkit would authorise without asking; otherwise exit 1 with `sudo: a password is required` |
+| `sudo -v`              | performs the authentication, as `sudo -v` does |
+| `sudo -l`              | prints the polkit policy and this session's temporary authorizations |
+| `sudo -k`, `-K`        | revokes polkit's temporary authorizations   |
+| `sudo -H`, `-N`, `-P`  | accepted: pkexec already does what they ask |
+| `sudo -s CMD`          | runs `CMD` through a shell, as root         |
+| `sudo -E …`            | runs with the caller's environment          |
+| `sudo -b …`            | starts the command in the background        |
+| `sudo --help`, `-V`    | answered by the real sudo; nothing elevates |
+| `sudo -i`, `-S`, `-A`  | refused, with the equivalent command        |
 | `sudoedit`, `visudo`   | refused, with the alternative               |
 | `su -c 'id'`           | dialog, then runs as root                   |
 | `su -c 'id' bob`       | as above, as `bob` (administrator password) |
@@ -55,7 +63,9 @@ pi -e ./pi-polkit
 | `su -m`, `-s`, `-g`, `-w`, `--pty` | refused, with the alternative   |
 | `pkexec …`             | passed through                              |
 
-Refused invocations exit with status 64 and one line naming the alternative.
+An option is refused only when polkit cannot express it: it needs a terminal, a
+password channel polkit does not have, or an editor. Refusals exit with status 64
+and one line naming the alternative.
 
 ## How it works
 
@@ -73,7 +83,9 @@ Two wiring paths put the stand-ins on `PATH`, one per execution form:
   line instead.
 
 The shim directory is created lazily in `$XDG_RUNTIME_DIR` (falling back to
-`/tmp`) as `0700` and removed at session shutdown.
+`/tmp`) as `0700` and removed at session shutdown. It also holds
+`pi-polkit-env`, the helper that `sudo -E` uses to re-export an environment
+pkexec stripped.
 
 ## Authorisation
 
@@ -88,6 +100,14 @@ session then runs without a dialog. That cache belongs to the agent: another
 agent, a restarted agent or a dismissed dialog means the next command prompts
 again, so do not rely on it.
 
+Measured on polkit 128 with `polkit-gnome`'s agent: after a successful `pkexec`,
+`pkcheck --list-temp` prints nothing and a non-interactive `pkcheck` still
+reports that authentication is required. polkit records no temporary
+authorization for this action, so the silent second run is the agent answering
+from its own copy of the password, and no user-space query can predict it. That
+is why `sudo -n` reports what the policy says rather than guessing whether a
+dialog would appear, and why `sudo -k` can only clear polkit's own record.
+
 ## Limitations
 
 - Absolute paths (`/usr/bin/sudo`) and relative ones (`./sudo`) bypass `PATH`.
@@ -96,6 +116,11 @@ again, so do not rely on it.
 - `su -c … USER` authenticates an administrator (polkit), not `USER`, so an
   account that real `su` would allow can be refused here.
 - `su -c` runs the command with `sh -c`, not with the target user's login shell.
+- `sudo -E` re-exports the environment through `pkexec`'s argument list, so the
+  values are visible in `ps` while the command starts. Exported shell functions
+  are skipped, and `PATH` loses the shim directories.
+- `sudo -k` cannot clear the password a desktop agent holds; only polkit's
+  temporary authorizations are revoked.
 - PowerShell is not handled; the extension targets Linux only.
 
 These bypass the redirect, not polkit, which still decides whether the command
@@ -108,11 +133,12 @@ without one, `pkexec` fails instead of prompting.
 
 ## Exit status
 
-| Status | Meaning                                      |
-|--------|----------------------------------------------|
-| 126    | the polkit dialog was dismissed              |
-| 127    | not authorized, or the program could not run |
-| 64     | the extension refused the invocation         |
+| Status | Meaning                                                |
+|--------|--------------------------------------------------------|
+| 1      | `-n` or `-v` could not be satisfied: polkit requires authentication, or refuses |
+| 126    | the polkit dialog was dismissed                        |
+| 127    | not authorized, or the program could not run           |
+| 64     | the extension refused the invocation                   |
 
 Messages are in English.
 
