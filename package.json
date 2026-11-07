@@ -14,7 +14,8 @@
   ],
   "scripts": {
     "check": "tsc -p tsconfig.json --noEmit",
-    "prepublishOnly": "npm run check"
+    "test": "node --experimental-strip-types --test test/*.test.ts",
+    "prepublishOnly": "npm run check && npm test"
   },
   "peerDependencies": {
     "@earendil-works/pi-coding-agent": "*"

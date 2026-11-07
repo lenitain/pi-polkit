@@ -6,8 +6,9 @@
     "strict": true,
     "skipLibCheck": true,
     "verbatimModuleSyntax": true,
+    "allowImportingTsExtensions": true,
     "noEmit": true,
     "types": ["node"]
   },
-  "include": ["index.ts", "polkit-redirect.ts", "polkit-shims.ts"]
+  "include": ["index.ts", "polkit-redirect.ts", "polkit-shims.ts", "test/**/*.ts"]
 }

@@ -309,7 +309,7 @@ if [ "$mode" = validate ]; then
 		exit 0
 		;;
 	1)
-		printf 'pi-polkit: sudo: polkit denies %s to this process\\n' "$ACTION" >&2
+		printf 'pi-polkit: sudo: polkit did not authorize %s (the policy denies it, or authentication failed)\\n' "$ACTION" >&2
 		exit 1
 		;;
 	2)
